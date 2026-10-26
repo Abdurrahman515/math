@@ -1,6 +1,8 @@
+
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 type EquationOperator = '+' | '−' | '×' | '÷'
 type EquationProblem = {
@@ -36,12 +38,16 @@ function leftSide(x: number, p: EquationProblem) {
 }
 
 function displayNumber(n: number) {
-  return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(3)))
+  const value = Number.isInteger(n) ? String(n) : String(Number(n.toFixed(3)))
+  return toArabicDigits(value)
 }
 
 export default function EquationTester({ props, onDone }: WidgetProps) {
   const raw = props?.problems
-  const problems = Array.isArray(raw) && raw.length > 0 && raw.every(isProblem) ? raw : DEFAULT_PROBLEMS
+  const problems = Array.isArray(raw) && raw.length > 0 && raw.every(isProblem)
+    ? raw
+    : DEFAULT_PROBLEMS
+
   const [index, setIndex] = useState(0)
   const [guess, setGuess] = useState('')
   const [feedback, setFeedback] = useState<string | null>(null)
@@ -53,23 +59,35 @@ export default function EquationTester({ props, onDone }: WidgetProps) {
     if (guess.trim() === '') return
     const n = Number(guess)
     if (!Number.isFinite(n)) return
+
     const actual = leftSide(n, p)
+
     if (Math.abs(actual - p.target) < 1e-9) {
       setSolved(true)
-      setFeedback(`✅ الطرف الأيسر = ${displayNumber(actual)}، والطرف الآخر = ${p.target}. صار الطرفان متساويين؛ إذن ${n} هو الحل! ${p.hint}`)
+      setFeedback(
+        toArabicDigits(
+          `✅ الطرف الأيسر = ${displayNumber(actual)}، والطرف الآخر = ${p.target}. صار الطرفان متساويين؛ إذن ${n} هو الحل! ${p.hint}`
+        )
+      )
     } else {
       setSolved(false)
-      setFeedback(`الطرف الأيسر صار ${displayNumber(actual)}، بينما الطرف الآخر ${p.target}. ما زالا غير متساويين. جرّبي العملية العكسية لتجدي قيمة x.`)
+      setFeedback(
+        toArabicDigits(
+          `الطرف الأيسر صار ${displayNumber(actual)}، بينما الطرف الآخر ${p.target}. ما زالا غير متساويين. جرّبي العملية العكسية لتجدي قيمة س.`
+        )
+      )
     }
   }
 
   const next = () => {
     if (!solved) return
+
     if (index + 1 >= problems.length) {
       setCompleted(true)
       onDone()
       return
     }
+
     setIndex(index + 1)
     setGuess('')
     setFeedback(null)
@@ -79,39 +97,88 @@ export default function EquationTester({ props, onDone }: WidgetProps) {
   return (
     <div className="card center">
       <h3 className="h3">⚖️ مختبر المعادلات</h3>
-      <div className="mut">مثال {index + 1} من {problems.length}: جرّبي قيمة لـ x واختبري هل تجعل الطرفين متساويين.</div>
+
+      <div className="mut">
+        المثال {toArabicDigits(index + 1)} من {toArabicDigits(problems.length)}: جرّبي قيمة لـ س واختبري هل تجعل الطرفين متساويين.
+      </div>
+
       <div className="bar" style={{ marginTop: 12, marginBottom: 18 }}>
-        <div style={{ width: `${((index + (solved ? 1 : 0)) / problems.length) * 100}%` }} />
+        <div
+          style={{
+            width: `${((index + (solved ? 1 : 0)) / problems.length) * 100}%`,
+          }}
+        />
       </div>
 
       <AnimatePresence mode="wait">
         {!completed && (
-          <motion.div key={index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
-            <div className="expr" dir="ltr">x {p.op} {p.constant} = {p.target}</div>
-            <div className="mut">إذا كانت قيمة x صحيحة، يجب أن يعطي الحساب على اليسار العدد نفسه الموجود على اليمين.</div>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+          >
+            <div className="expr" dir="ltr">
+              س {p.op} {toArabicDigits(p.constant)} = {toArabicDigits(p.target)}
+            </div>
+
+            <div className="mut">
+              إذا كانت قيمة س صحيحة، يجب أن يعطي الحساب على اليسار العدد نفسه الموجود على اليمين.
+            </div>
+
             <div className="numrow" style={{ justifyContent: 'center', marginTop: 14 }}>
               <input
                 className="num"
                 dir="ltr"
                 inputMode="decimal"
                 type="number"
-                placeholder="جرّبي قيمة x"
+                placeholder="جرّبي قيمة س"
                 value={guess}
                 disabled={solved}
                 onChange={(event) => setGuess(event.target.value)}
-                onKeyDown={(event) => { if (event.key === 'Enter') check() }}
-                aria-label="قيمة التخمين للمتغير x"
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') check()
+                }}
+                aria-label="قيمة التخمين للمتغير س"
               />
-              {!solved && <button className="btn" onClick={check}>اختبري ✔️</button>}
+
+              {!solved && (
+                <button className="btn" onClick={check}>
+                  اختبري ✔️
+                </button>
+              )}
             </div>
-            {feedback && <div className={`fb ${solved ? 'ok' : 'no'}`}>{feedback}</div>}
-            {solved && <button className="btn" style={{ marginTop: 12 }} onClick={next}>{index + 1 === problems.length ? 'أنهي المختبر 🎉' : 'المعادلة التالية ▶️'}</button>}
+
+            {feedback && (
+              <div className={`fb ${solved ? 'ok' : 'no'}`}>
+                {feedback}
+              </div>
+            )}
+
+            {solved && (
+              <button
+                className="btn"
+                style={{ marginTop: 12 }}
+                onClick={next}
+              >
+                {index + 1 === problems.length
+                  ? 'أنهي المختبر 🎉'
+                  : 'المعادلة التالية ▶️'}
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {completed && <div className="fb ok">🎉 ممتاز! اختبرتِ المعادلات الأربع وتعلمتِ كيف نستخدم العملية العكسية ثم نتحقق بالتعويض.</div>}
-      <div className="mut" style={{ marginTop: 12 }}>تذكّري: الجمع عكسه الطرح، والضرب عكسه القسمة.</div>
+      {completed && (
+        <div className="fb ok">
+          🎉 ممتاز! اختبرتِ المعادلات الأربع وتعلمتِ كيف نستخدم العملية العكسية ثم نتحقق بالتعويض.
+        </div>
+      )}
+
+      <div className="mut" style={{ marginTop: 12 }}>
+        تذكّري: الجمع عكسه الطرح، والضرب عكسه القسمة.
+      </div>
     </div>
   )
 }

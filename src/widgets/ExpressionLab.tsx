@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 function numberProp(props: Record<string, unknown> | undefined, key: string, fallback: number) {
   const value = props?.[key]
@@ -38,22 +39,27 @@ export default function ExpressionLab({ props, onDone }: WidgetProps) {
       <p className="mut">{inputLabel} هو العدد الذي نختاره، والعبارة تخبرنا بالناتج.</p>
 
       <div className="power" dir="ltr" style={{ fontSize: '3.2rem', alignItems: 'center', gap: 8 }}>
-        <span>{coefficient}{variable}</span>
+        <span>{toArabicDigits(coefficient)}{variable}</span>
         <span>+</span>
-        <span>{constant}</span>
+        <span>{toArabicDigits(constant)}</span>
       </div>
-      <div className="mut">العبارة الجبرية: {coefficient}{variable} + {constant}</div>
+      <div className="mut">
+        العبارة الجبرية: {toArabicDigits(coefficient)}{variable} + {toArabicDigits(constant)}
+      </div>
 
       <div className="row" style={{ marginTop: 18 }}>
         <div className="stepper">
           <button className="iconbtn" onClick={() => change(n - 1)} disabled={n <= min} aria-label="إنقاص قيمة المتغير">−</button>
-          <span>{inputLabel}: <b>{n}</b></span>
+          <span>{inputLabel}: <b>{toArabicDigits(n)}</b></span>
           <button className="iconbtn" onClick={() => change(n + 1)} disabled={n >= max} aria-label="زيادة قيمة المتغير">+</button>
         </div>
       </div>
 
       <motion.div key={n} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="fb tip" style={{ marginTop: 14 }}>
-        نعوّض عن {variable} بـ {n}: <b>{coefficient} × {n} + {constant} = {coefficient * n} + {constant} = {result}</b>
+        نعوّض عن {variable} بـ {toArabicDigits(n)}:
+        <b>
+          {toArabicDigits(coefficient)} × {toArabicDigits(n)} + {toArabicDigits(constant)} = {toArabicDigits(coefficient * n)} + {toArabicDigits(constant)} = {toArabicDigits(result)}
+        </b>
       </motion.div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 5, margin: '16px 0' }} aria-label={`${outputLabel}: ${result}`}>
@@ -70,8 +76,14 @@ export default function ExpressionLab({ props, onDone }: WidgetProps) {
           </motion.span>
         ))}
       </div>
-      <div className="bigline">{outputLabel}: <b>{result}</b></div>
-      {result > 30 && <div className="mut">نعرض أول 30 مربعاً فقط حتى تبقى الشاشة مرتبة.</div>}
+      <div className="bigline">
+        {outputLabel}: <b>{toArabicDigits(result)}</b>
+      </div>
+      {result > 30 && 
+        <div className="mut">
+          نعرض أول {toArabicDigits(30)} مربعاً فقط حتى تبقى الشاشة مرتبة.
+        </div>
+      }
       <div className="mut">غيّري القيمة أكثر من مرة ولاحظي كيف يتغيّر الناتج، بينما تبقى القاعدة نفسها.</div>
     </div>
   )

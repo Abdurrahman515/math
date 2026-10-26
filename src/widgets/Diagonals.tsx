@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
+import { toArabicDigits } from '../lib/arabicDigits'
+
 
 const D = (n: number) => (n * (n - 3)) / 2
 const COLS = [3, 4, 5, 6, 7]
@@ -37,12 +39,40 @@ export default function Diagonals({ onDone }: WidgetProps) {
         ))}
         {pts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={5} className="vtx" />)}
       </svg>
-      <div>عدد الأضلاع: <b>{n}</b> — عدد الأقطار: <b>{D(n)}</b>{n === 3 && ' (المثلث ما فيه ولا قطر 😄)'}</div>
+      <div>
+        عدد الأضلاع: <b>{toArabicDigits(n)}</b>
+        {' — '}
+        عدد الأقطار: <b>{toArabicDigits(D(n))}</b>
+        {n === 3 && ' (المثلث ما فيه ولا قطر 😄)'}
+      </div>
 
       <div className="table" dir="ltr">
-        <div className="trow"><span className="th">أضلاع</span>{COLS.map((c) => <span key={c} className="td">{c}</span>)}</div>
-        <div className="trow"><span className="th">أقطار</span>{COLS.map((c) => <span key={c} className={'td' + (c <= n ? ' on' : '')}>{c <= n ? D(c) : '؟'}</span>)}</div>
-        <div className="trow"><span className="th">القفزة</span>{COLS.map((c) => <span key={c} className="td jump">{c > 3 && c <= n ? `+${D(c) - D(c - 1)}` : ''}</span>)}</div>
+        <div className="trow">
+          <span className="th">أضلاع</span>
+          {COLS.map((c) => (
+            <span key={c} className="td">{toArabicDigits(c)}</span>
+          ))}
+        </div>
+
+        <div className="trow">
+          <span className="th">أقطار</span>
+          {COLS.map((c) => (
+            <span key={c} className={'td' + (c <= n ? ' on' : '')}>
+              {c <= n ? toArabicDigits(D(c)) : '؟'}
+            </span>
+          ))}
+        </div>
+
+        <div className="trow">
+          <span className="th">القفزة</span>
+          {COLS.map((c) => (
+            <span key={c} className="td jump">
+              {c > 3 && c <= n
+                ? toArabicDigits(`+${D(c) - D(c - 1)}`)
+                : ''}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className="row">

@@ -4,6 +4,7 @@ import type { WidgetProps } from '../types'
 import { allowed, apply, show, tokenize, whyWrong } from '../lib/calc'
 import type { Tok } from '../lib/calc'
 import { Expr } from '../components/Rich'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 export default function Solver({ props, onDone }: WidgetProps) {
   const exprs = (props?.exprs as string[] | undefined) ?? ['1 + 1']
@@ -43,11 +44,15 @@ export default function Solver({ props, onDone }: WidgetProps) {
 
   return (
     <div className="card center">
-      <h3 className="h3">🎮 دوّري واحسبي ({idx + 1}/{exprs.length})</h3>
+      <h3 className="h3">
+        🎮 دوّري واحسبي ({toArabicDigits(idx + 1)}/{toArabicDigits(exprs.length)})
+      </h3>
       <div className="mut">اضغطي على العملية اللي لازم تنحسب <b>أولاً</b></div>
 
       {steps.slice(0, -1).map((s, k) => (
-        <div key={k} className="hist"><Expr s={(k > 0 ? '= ' : '') + show(s)} /></div>
+        <div key={k} className="hist">
+          <Expr s={(k > 0 ? '= ' : '') + show(s)} />
+        </div>
       ))}
 
       <motion.div key={shake} className="expr" dir="ltr" animate={shake ? { x: [0, -8, 8, -6, 6, 0] } : {}}>
@@ -61,7 +66,9 @@ export default function Solver({ props, onDone }: WidgetProps) {
                 initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                 onClick={() => tap(i)}
               >
-                {t.v === '^' ? <sup>{exp?.k === 'n' ? exp.v : ''}</sup> : t.v}
+                {t.v === '^'
+                  ? <sup>{exp?.k === 'n' ? toArabicDigits(exp.v) : ''}</sup>
+                  : t.v}
               </motion.button>
             )
           }
@@ -71,7 +78,7 @@ export default function Solver({ props, onDone }: WidgetProps) {
               key={key} className={'tok ' + (t.k === 'n' ? 'num' : 'par')}
               initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
             >
-              {t.k === 'n' ? t.v : t.k}
+              {t.k === 'n' ? toArabicDigits(t.v) : t.k}
             </motion.span>
           )
         })}
@@ -80,8 +87,14 @@ export default function Solver({ props, onDone }: WidgetProps) {
       {msg && <div className="fb no">🤔 {msg}</div>}
       {fin && (
         <>
-          <div className="fb ok">✅ الناتج = <b>{result}</b></div>
-          {!all && <button className="btn" onClick={next}>{idx + 1 >= exprs.length ? 'خلصنا 🎉' : 'التالي ▶️'}</button>}
+          <div className="fb ok">
+            ✅ الناتج = <b>{toArabicDigits(result)}</b>
+          </div>
+          {!all && <button className="btn" onClick={next}>
+            {idx + 1 >= exprs.length
+              ? 'خلصنا 🎉'
+              : `التالي (${toArabicDigits(idx + 2)}) ▶️`}
+          </button>}
         </>
       )}
       {all && <div className="fb tip">🎉 خلصتي كل التمارين!</div>}

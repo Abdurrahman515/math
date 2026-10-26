@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 type PropertyExample = { name: string; emoji: string; left: string; right: string; leftValue: number; rightValue: number; note: string }
 
@@ -52,15 +53,25 @@ export default function PropertyExplorer({ onDone }: WidgetProps) {
           <motion.div key={index} initial={{ opacity: 0, y: 9 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -9 }} style={{ width: '100%', marginTop: 18 }}>
             <div className="h3">{current.emoji} {current.name}</div>
             <div className="mut">الطريقة الأولى</div>
-            <div className="expr" dir="ltr">{current.left} = {current.leftValue}</div>
+            <div className="expr" dir="ltr">
+              {toArabicDigits(current.left)} = {toArabicDigits(current.leftValue)}
+            </div>
             <div className="mut">الطريقة الثانية</div>
-            <div className="expr" dir="ltr">{current.right} = {current.rightValue}</div>
+            <div className="expr" dir="ltr">
+              {toArabicDigits(current.right)} = {toArabicDigits(current.rightValue)}
+            </div>
             <motion.div className="fb ok" key={`${index}-result`} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-              ✅ الناتجان متساويان: {current.leftValue}
+              ✅ الناتجان متساويان: {toArabicDigits(current.leftValue)}
             </motion.div>
             <div className="say info" style={{ marginTop: 10 }}>{current.note}</div>
-            <div className="mut" style={{ marginTop: 8 }}>شاهدتِ {seen.length} من {examples.length} أمثلة.</div>
-            <button className="btn" style={{ marginTop: 10 }} onClick={next}>{index + 1 === examples.length ? 'أنهي المختبر 🎉' : 'الخاصية التالية ▶️'}</button>
+            <div className="mut" style={{ marginTop: 8 }}>
+              شاهدتِ {toArabicDigits(seen.length)} من {toArabicDigits(examples.length)} أمثلة.
+            </div>
+            <button className="btn" style={{ marginTop: 10 }} onClick={next}>
+              {index + 1 === examples.length
+                ? 'أنهي المختبر 🎉'
+                : `الخاصية التالية (${toArabicDigits(index + 2)}) ▶️`}
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

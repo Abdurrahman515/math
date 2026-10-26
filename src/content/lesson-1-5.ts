@@ -1,16 +1,28 @@
 import type { Lesson, Question } from '../types'
 import { rand } from '../lib/rng'
 
+
 const evaluateQ = (): Question => {
   const a = rand(2, 7)
   const x = rand(2, 9)
   const c = rand(1, 9)
   const answer = a * x + c
+
   const candidates = [
-    { value: a + x + c, why: `جمعتي المعامل والمتغير بدل ضربهما. $${a}x$ تعني $${a} × x$، لذلك نضرب أولاً ثم نضيف ${c}.` },
-    { value: a * (x + c), why: `أضفتِ ${c} إلى قيمة المتغير قبل الضرب، لكن العبارة هي $${a}x + ${c}$ وليست $${a}(x + ${c})$.` },
-    { value: a * x, why: `حسبتِ جزء الضرب $${a} × ${x}$ ونسيتِ إضافة ${c} في نهاية العبارة.` },
+    {
+      value: a + x + c,
+      why: `جمعتِ المعامل والمتغير بدل ضربهما. $${a}س$ تعني $${a} × س$، لذلك نضرب أولاً ثم نضيف ${c}.`,
+    },
+    {
+      value: a * (x + c),
+      why: `أضفتِ ${c} إلى قيمة المتغير قبل الضرب، لكن العبارة هي $${a}س + ${c}$ وليست $${a}(س + ${c})$.`,
+    },
+    {
+      value: a * x,
+      why: `حسبتِ جزء الضرب $${a} × ${x}$ ونسيتِ إضافة ${c} في نهاية العبارة.`,
+    },
   ]
+
   const seen = new Set([answer])
   const wrong = candidates.filter((candidate) => {
     if (seen.has(candidate.value)) return false
@@ -20,13 +32,14 @@ const evaluateQ = (): Question => {
 
   return {
     kind: 'numeric',
-    prompt: `احسبي قيمة $${a}x + ${c}$ عندما يكون $x = ${x}$`,
+    prompt: `احسبي قيمة $${a}س + ${c}$ عندما يكون $س = ${x}$`,
     answer,
     wrong,
-    why: `نعوّض عن $x$ بـ ${x}: $${a} × ${x} + ${c} = ${a * x} + ${c} = ${answer}$.`,
+    why: `نعوّض عن $س$ بـ ${x}: $${a} × ${x} + ${c} = ${a * x} + ${c} = ${answer}$.`,
     fallback: 'استبدلي الحرف بقيمته، ثم احسبي الضرب قبل الجمع.',
   }
 }
+
 
 export const lesson15: Lesson = {
   id: '1-5',

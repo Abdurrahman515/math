@@ -7,6 +7,7 @@ import { widgets } from '../widgets'
 import { Quiz } from './Quiz'
 import { Reveal } from './Reveal'
 import { Rich } from './Rich'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 function Say({ b }: { b: Extract<Block, { t: 'say' }> }) {
   return (
@@ -27,7 +28,9 @@ function Practice(p: {
 
   return (
     <div>
-      <div className="ptitle">🏋️ {p.title ?? 'تمرين'} — {k + 1}/{p.count}</div>
+      <div className="ptitle">
+        🏋️ {p.title ?? 'تمرين'} — {toArabicDigits(k + 1)}/{toArabicDigits(p.count)}
+      </div>
       <Quiz
         key={k} q={q} lessonId={p.lessonId}
         onSolved={(f) => { p.onScore(f); setSolved(true); if (k + 1 >= p.count) p.onDone() }}
@@ -67,7 +70,9 @@ export function LessonPlayer({ lesson, onExit }: { lesson: Lesson; onExit: () =>
       <div className="top">
         <button className="iconbtn" onClick={onExit} aria-label="رجوع"><ArrowRight size={22} /></button>
         <div className="bar"><div style={{ width: `${(Math.min(pos, n) / n) * 100}%` }} /></div>
-        <span className="mut">{lesson.emoji} {lesson.id}</span>
+        <span className="mut">
+          {lesson.emoji} {toArabicDigits(lesson.id)}
+        </span>
       </div>
 
       <h1 className="title">{lesson.title}</h1>
@@ -98,7 +103,9 @@ export function LessonPlayer({ lesson, onExit }: { lesson: Lesson; onExit: () =>
               </motion.span>
             ))}
           </div>
-          <div className="mut">أجبتي صح من أول مرة على {score.first} من {score.total}</div>
+          <div className="mut">
+            أجبتي صح من أول مرة على {toArabicDigits(score.first)} من {toArabicDigits(score.total)}
+          </div>
           <div className="row">
             <button className="btn" onClick={onExit}>🏠 للرئيسية</button>
             <button className="link" onClick={restart}>🔁 أعيدي الدرس</button>

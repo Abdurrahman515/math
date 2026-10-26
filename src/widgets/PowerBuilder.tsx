@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
 import { Expr } from '../components/Rich'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x))
 
@@ -18,14 +19,25 @@ export default function PowerBuilder({ onDone }: WidgetProps) {
     if (t === 4) onDone()
   }
 
-  const read = e === 2 ? `${b} تربيع` : e === 3 ? `${b} تكعيب` : `${b} أُس ${e}`
+  const read =
+    e === 2
+      ? `${toArabicDigits(b)} تربيع`
+      : e === 3
+        ? `${toArabicDigits(b)} تكعيب`
+        : `${toArabicDigits(b)} أُس ${toArabicDigits(e)}`
 
   return (
     <div className="card center">
       <h3 className="h3">🧪 مختبر الأسس: غيّري وشوفي</h3>
       <div className="power" dir="ltr">
-        <span className="pw-b">{b}<small>الأساس</small></span>
-        <span className="pw-e">{e}<small>الأس</small></span>
+        <span className="pw-b">
+          {toArabicDigits(b)}
+          <small>الأساس</small>
+        </span>
+        <span className="pw-e">
+          {toArabicDigits(e)}
+          <small>الأس</small>
+        </span>
       </div>
       <div className="row">
         <div className="stepper">
@@ -46,14 +58,20 @@ export default function PowerBuilder({ onDone }: WidgetProps) {
               key={i} className="chip" layout
               initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
             >
-              {i > 0 ? `× ${b}` : b}
+              {i > 0 ? `× ${toArabicDigits(b)}` : toArabicDigits(b)}
             </motion.span>
           ))}
         </AnimatePresence>
-        <span className="eqv">= {b ** e}</span>
+        <span className="eqv">= {toArabicDigits(b ** e)}</span>
       </div>
-      <div>👀 لاحظي: الأساس <b>اتكرر {e}</b> {e === 1 ? 'مرة' : 'مرات'}، يعني عدد العوامل = الأس.</div>
-      <div className="mut">بنقرأها: <b>{read}</b> &nbsp;<Expr s={`${b}^${e}`} /></div>
+      <div>
+        👀 لاحظي: الأساس <b>اتكرر {toArabicDigits(e)}</b>{' '}
+        {e === 1 ? 'مرة' : 'مرات'}، يعني عدد العوامل = الأس.
+      </div>
+      <div className="mut">
+        بنقرأها: <b>{read}</b> &nbsp;
+        <Expr s={`${b}^${e}`} />
+      </div>
     </div>
   )
 }

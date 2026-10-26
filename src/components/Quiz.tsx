@@ -4,6 +4,7 @@ import type { Question } from '../types'
 import { pick, shuffle } from '../lib/rng'
 import { logMistake } from '../lib/store'
 import { Rich } from './Rich'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 const PRAISE = ['برافو عليكِ! 🎉', 'صح عليكِ! ⭐', 'ممتاز! 👏', 'شاطرة! 💪', 'هيك بدّها! 🔥']
 const norm = (s: string) =>
@@ -87,7 +88,10 @@ export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string;
 
       {q.kind === 'numeric' && !solved && mistakes >= 2 &&
         (peek ? (
-          <div className="fb tip">الحل: <Rich t={q.why} />{'\n'}الجواب: <b>{q.answer}</b></div>
+          <div className="fb tip">
+            الحل: <Rich t={q.why} />
+            {'\n'}الجواب: <b>{toArabicDigits(q.answer)}</b>
+          </div>
         ) : (
           <button className="link" onClick={() => setPeek(true)}>🔎 وضّحي لي الحل</button>
         ))}

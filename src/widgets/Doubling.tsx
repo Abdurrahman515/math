@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
 import { Expr } from '../components/Rich'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 export default function Doubling({ onDone }: WidgetProps) {
   const [n, setN] = useState(0)
@@ -16,7 +17,9 @@ export default function Doubling({ onDone }: WidgetProps) {
   return (
     <div className="card center">
       <h3 className="h3">📱 رسالة بتتضاعف</h3>
-      <div className="mut">بعد {n} دقيقة: عدد الناس اللي وصلتلهم الرسالة</div>
+      <div className="mut">
+        بعد {toArabicDigits(n)} دقيقة: عدد الناس اللي وصلتلهم الرسالة
+      </div>
       <div className="dots">
         {Array.from({ length: people }, (_, i) => (
           <motion.span

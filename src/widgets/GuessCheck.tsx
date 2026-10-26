@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { WidgetProps } from '../types'
+import { toArabicDigits } from '../lib/arabicDigits'
 
 type Attempt = { small: number; large: number; amount: number }
 
@@ -42,7 +43,9 @@ export default function GuessCheck({ props, onDone }: WidgetProps) {
   return (
     <div className="card center">
       <h3 className="h3">🧪 مختبر التخمين والتحقّق</h3>
-      <p className="mut">غيّري عدد السيارات الصغيرة، وستكون بقية السيارات كبيرة. لازم يبقى المجموع {totalCars} سيارات.</p>
+      <p className="mut">
+        غيّري عدد السيارات الصغيرة، وستكون بقية السيارات كبيرة. لازم يبقى المجموع {toArabicDigits(totalCars)} سيارات.
+      </p>
 
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 6, margin: '16px 0', fontSize: '1.65rem' }} aria-label="عدد السيارات حسب النوع">
         {Array.from({ length: totalCars }, (_, i) => (
@@ -61,16 +64,26 @@ export default function GuessCheck({ props, onDone }: WidgetProps) {
       <div className="row">
         <div className="stepper">
           <button className="iconbtn" onClick={() => changeGuess(small - 1)} disabled={small <= 0} aria-label="تقليل السيارات الصغيرة">−</button>
-          <span>🚗 صغيرة: <b>{small}</b></span>
+          <span>🚗 صغيرة: <b>{toArabicDigits(small)}</b></span>
           <button className="iconbtn" onClick={() => changeGuess(small + 1)} disabled={small >= totalCars} aria-label="زيادة السيارات الصغيرة">+</button>
         </div>
       </div>
 
       <div className="card" style={{ marginTop: 12, background: '#f7f7ff', boxShadow: 'none' }}>
-        <div>🚗 {small} صغيرة × {smallPrice} = <b>{small * smallPrice}</b> ريال</div>
-        <div>🚙 {large} كبيرة × {largePrice} = <b>{large * largePrice}</b> ريال</div>
-        <div style={{ marginTop: 8, fontSize: '1.25rem' }}>المجموع: <b>{amount}</b> ريال</div>
-        <div className="mut">المطلوب الوصول إليه: {target} ريال</div>
+        <div>
+          🚗 {toArabicDigits(small)} صغيرة × {toArabicDigits(smallPrice)} ={' '}
+          <b>{toArabicDigits(small * smallPrice)}</b> ريال
+        </div>
+        <div>
+          🚙 {toArabicDigits(large)} كبيرة × {toArabicDigits(largePrice)} ={' '}
+          <b>{toArabicDigits(large * largePrice)}</b> ريال
+        </div>
+        <div style={{ marginTop: 8, fontSize: '1.25rem' }}>
+          المجموع: <b>{toArabicDigits(amount)}</b> ريال
+        </div>
+        <div className="mut">
+          المطلوب الوصول إليه: {toArabicDigits(target)} ريال
+        </div>
       </div>
 
       <div className="row">
@@ -78,27 +91,49 @@ export default function GuessCheck({ props, onDone }: WidgetProps) {
       </div>
 
       {feedback && (
-        <motion.div key={`${feedback.small}-${feedback.large}-${attempts.length}`} className={`fb ${solved ? 'ok' : 'no'}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          key={`${feedback.small}-${feedback.large}-${attempts.length}`}
+          className={`fb ${solved ? 'ok' : 'no'}`}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           {solved ? (
-            <>🎉 ممتاز! المبلغ يساوي {target} ريالاً، وعدد السيارات {feedback.small + feedback.large} تماماً. تخمينك صحيح!</>
+            <>
+              🎉 ممتاز! المبلغ يساوي {toArabicDigits(target)} ريالاً،
+              وعدد السيارات {toArabicDigits(feedback.small + feedback.large)} تماماً.
+              تخمينك صحيح!
+            </>
           ) : feedback.amount > target ? (
-            <>المبلغ أعلى من المطلوب بـ {feedback.amount - target} ريالاً. جرّبي استبدال سيارة كبيرة بسيارة صغيرة؛ سيقل المبلغ بمقدار {largePrice - smallPrice} ريالاً.</>
+            <>
+              المبلغ أعلى من المطلوب بـ {toArabicDigits(feedback.amount - target)} ريالاً.
+              جرّبي استبدال سيارة كبيرة بسيارة صغيرة؛ سيقل المبلغ بمقدار{' '}
+              {toArabicDigits(largePrice - smallPrice)} ريالاً.
+            </>
           ) : (
-            <>المبلغ أقل من المطلوب بـ {target - feedback.amount} ريالاً. جرّبي استبدال سيارة صغيرة بسيارة كبيرة؛ سيزيد المبلغ بمقدار {largePrice - smallPrice} ريالاً.</>
+            <>
+              المبلغ أقل من المطلوب بـ {toArabicDigits(target - feedback.amount)} ريالاً.
+              جرّبي استبدال سيارة صغيرة بسيارة كبيرة؛ سيزيد المبلغ بمقدار{' '}
+              {toArabicDigits(largePrice - smallPrice)} ريالاً.
+            </>
           )}
         </motion.div>
       )}
 
-      {attempts.length > 0 && (
-        <div style={{ marginTop: 14, textAlign: 'start' }}>
-          <b>🗒️ سجل المحاولات</b>
-          {attempts.map((a, i) => (
-            <div key={`${i}-${a.small}-${a.large}`} className="hist" style={{ padding: '5px 0' }}>
-              {i + 1}. {a.small} صغيرة + {a.large} كبيرة = {a.amount} ريال {a.amount === target ? '✅' : a.amount > target ? '⬆️ أعلى من المطلوب' : '⬇️ أقل من المطلوب'}
-            </div>
-          ))}
+      {attempts.map((a, i) => (
+        <div
+          key={`${i}-${a.small}-${a.large}`}
+          className="hist"
+          style={{ padding: '5px 0' }}
+        >
+          {toArabicDigits(i + 1)}. {toArabicDigits(a.small)} صغيرة +{' '}
+          {toArabicDigits(a.large)} كبيرة = {toArabicDigits(a.amount)} ريال{' '}
+          {a.amount === target
+            ? '✅'
+            : a.amount > target
+              ? '⬆️ أعلى من المطلوب'
+              : '⬇️ أقل من المطلوب'}
         </div>
-      )}
+      ))}
 
       {solved && (
         <button className="link" onClick={() => { setSmall(Math.floor(totalCars / 2)); setAttempts([]); setFeedback(null); setDoneSent(false) }}>
