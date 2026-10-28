@@ -3,17 +3,23 @@ import { useSyncExternalStore } from 'react'
 export type Progress = {
   lessons: Record<string, { stars: number; at: number }>
   mistakes: { lesson: string; q: string; chosen: string; at: number }[]
+  exams: Record<string, ExamRecord>
 }
 
 const KEY = 'math-app:v1'
-const empty = (): Progress => ({ lessons: {}, mistakes: [] })
+const empty = (): Progress => ({ lessons: {}, mistakes: [], exams: {} })
 
 function load(): Progress {
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) {
       const p = JSON.parse(raw)
-      if (p && typeof p.lessons === 'object') return { lessons: p.lessons, mistakes: Array.isArray(p.mistakes) ? p.mistakes : [] }
+      if (p && typeof p.lessons === 'object')
+        return {
+          lessons: p.lessons,
+          mistakes: Array.isArray(p.mistakes) ? p.mistakes : [],
+          exams: p.exams && typeof p.exams === 'object' ? p.exams : {},
+        }
     }
   } catch { /* تجاهل */ }
   return empty()
@@ -58,5 +64,41 @@ export async function importProgress(file: File) {
     if (!merged[k] || merged[k].stars < v.stars) merged[k] = v
   }
   const m = [...state.mistakes, ...(Array.isArray(p.mistakes) ? p.mistakes : [])]
-  set({ lessons: merged, mistakes: m.sort((a, b) => a.at - b.at).slice(-300) })
+  const ex = { ...state.exams }
+  for (const [k, v] of Object.entries(p.exams ?? {}) as [string, ExamRecord][]) {
+    const o = ex[k]
+    if (!o) { ex[k] = v; continue }
+    const passed = o.passed || v.passed
+    ex[k] = {
+      best: Math.max(o.best, v.best),
+      attempts: Math.max(o.attempts, v.attempts),
+      passed,
+      lastAt: Math.max(o.lastAt, v.lastAt),
+      lockedUntil: passed ? 0 : Math.max(o.lockedUntil, v.lockedUntil),
+      weak: v.lastAt > o.lastAt ? v.weak : o.weak,
+    }
+  }
+  set({ lessons: merged, mistakes: m.sort((a, b) => a.at - b.at).slice(-300), exams: ex })
+}
+
+
+export type ExamRecord = {
+  best: number; attempts: number; passed: boolean
+  lastAt: number; lockedUntil: number; weak: string[]
+}
+
+
+export function recordExam(id: string, pct: number, passed: boolean, weak: string[], lockHours: number) {
+  const o = state.exams[id]
+  const everPassed = passed || !!o?.passed
+  const rec: ExamRecord = {
+    best: Math.max(o?.best ?? 0, pct),
+    attempts: (o?.attempts ?? 0) + 1,
+    passed: everPassed,
+    lastAt: Date.now(),
+    // القفل بعد الرسوب فقط، وبعد النجاح لا قفل
+    lockedUntil: everPassed || lockHours <= 0 ? 0 : Date.now() + lockHours * 3600_000,
+    weak,
+  }
+  set({ ...state, exams: { ...state.exams, [id]: rec } })
 }

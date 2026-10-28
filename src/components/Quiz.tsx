@@ -7,13 +7,16 @@ import { Rich } from './Rich'
 import { toArabicDigits } from '../lib/arabicDigits'
 
 const PRAISE = ['برافو عليكِ! 🎉', 'صح عليكِ! ⭐', 'ممتاز! 👏', 'شاطرة! 💪', 'هيك بدّها! 🔥']
+const MISS = ['قريبة! جرّبي مرة تانية 💪', 'ولا يهمك، المحاولة جزء من التعلم 🌱', 'لا تستسلمي، قربتِ! ✨', 'فكّري شوي وجرّبي كمان 🤔']
 const norm = (s: string) =>
-  s.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace('−', '-').replace(',', '.').trim()
+  s.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace('−', '-').replace(/[,٫]/g, '.').trim()
+
 
 export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string; onSolved: (firstTry: boolean) => void }) {
   const opts = useMemo(() => (q.kind === 'choice' ? shuffle(q.options) : []), [q])
   const praise = useMemo(() => pick(PRAISE), [])
   const [tried, setTried] = useState<number[]>([])
+  const missLine = useMemo(() => pick(MISS), [])
   const [mistakes, setMistakes] = useState(0)
   const [solved, setSolved] = useState(false)
   const [fb, setFb] = useState<{ ok: boolean; text: string } | null>(null)
@@ -40,7 +43,7 @@ export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string;
     const n = Number(s)
     if (s === '' || Number.isNaN(n)) return
     if (n === q.answer) win(q.why)
-    else miss(q.wrong?.find((w) => w.value === n)?.why ?? q.fallback ?? 'مو هيك، جرّبي مرة تانية 🙂', val)
+    else miss(q.wrong?.find((w) => w.value === n)?.why ?? q.fallback ?? 'مو هيك بعد، جرّبي مرة تانية 🙂', val);
   }
 
   return (
@@ -81,7 +84,7 @@ export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string;
             className={'fb ' + (fb.ok ? 'ok' : 'no')}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
           >
-            {fb.ok ? praise + '\n' : '🤔 '}<Rich t={fb.text} />
+            {fb.ok ? praise + '\n' : missLine + '\n'}<Rich t={fb.text} />
           </motion.div>
         )}
       </AnimatePresence>

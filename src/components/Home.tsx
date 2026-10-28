@@ -2,6 +2,9 @@ import { useRef, useState } from 'react'
 import { Download, Star, Upload } from 'lucide-react'
 import { chapters } from '../content'
 import { exportProgress, importProgress, useProgress } from '../lib/store'
+import { ExamCard } from './ExamCard'
+import { exams } from '../content'
+
 
 export function Stars({ n }: { n: number }) {
   return (
@@ -42,6 +45,7 @@ export function Home() {
               <Stars n={p.lessons[l.id]?.stars ?? 0} />
             </a>
           ))}
+          {exams.filter((e) => e.afterChapter === c.id).map((e) => <ExamCard key={e.id} e={e} />)}
         </section>
       ))}
 
