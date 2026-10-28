@@ -6,14 +6,14 @@ import { finishLesson } from '../lib/store'
 import { widgets } from '../widgets'
 import { Quiz } from './Quiz'
 import { Reveal } from './Reveal'
-import { Rich } from './Rich'
+import { RichBlock } from './Rich'
 import { toArabicDigits } from '../lib/arabicDigits'
 
 function Say({ b }: { b: Extract<Block, { t: 'say' }> }) {
   return (
     <div className={'say ' + (b.tone ?? 'info')}>
       {b.emoji && <span className="em">{b.emoji}</span>}
-      <p><Rich t={b.text} /></p>
+      <RichBlock t={b.text} />
     </div>
   )
 }

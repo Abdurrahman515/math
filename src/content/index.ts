@@ -35,6 +35,23 @@ import { lesson46 } from './lesson-4-6'
 import { lesson47 } from './lesson-4-7'
 import { lesson48 } from './lesson-4-8'
 import { bank4 } from './bank-4'
+import { lesson51 } from './lesson-5-1'
+import { lesson52 } from './lesson-5-2'
+import { lesson53 } from './lesson-5-3'
+import { lesson54 } from './lesson-5-4'
+import { lesson55 } from './lesson-5-5'
+import { bank5 } from './bank-5'
+import { lesson61 } from './lesson-6-1'
+import { lesson62 } from './lesson-6-2'
+import { lesson63 } from './lesson-6-3'
+import { lesson64 } from './lesson-6-4'
+import { lesson65 } from './lesson-6-5'
+import { bank6 } from './bank-6'
+import { lesson71 } from './lesson-7-1'
+import { lesson72 } from './lesson-7-2'
+import { lesson73 } from './lesson-7-3'
+import { lesson74 } from './lesson-7-4'
+import { bank7 } from './bank-7'
 
 
 export const chapters: Chapter[] = [
@@ -62,11 +79,37 @@ export const chapters: Chapter[] = [
     emoji: '📐',
     lessons: [lesson41, lesson42, lesson43, lesson44, lesson45, lesson46, lesson47, lesson48],
   },
+  {
+    id: '5',
+    title: 'تطبيقات النسبة المئوية',
+    emoji: '💯',
+    lessons: [lesson51, lesson52, lesson53, lesson54, lesson55],
+  },
+  {
+    id: '6',
+    title: 'الإحصاء',
+    emoji: '📊',
+    lessons: [lesson61, lesson62, lesson63, lesson64, lesson65],
+  },
+  {
+    id: '7',
+    title: 'الاحتمال',
+    emoji: '🎲',
+    lessons: [lesson71, lesson72, lesson73, lesson74],
+  },
 ]
 export const allLessons = chapters.flatMap((c) => c.lessons);
 
 
-export const banks: Record<string, PoolItem[]> = { '1': bank1, '2': bank2, '3': bank3, '4': bank4 }
+export type Semester = { id: string; title: string; emoji: string; chapterIds: string[] }
+
+export const semesters: Semester[] = [
+  { id: 's1', title: 'الفصل الدراسي الأول', emoji: '🌱', chapterIds: ['1', '2', '3', '4'] },
+  { id: 's2', title: 'الفصل الدراسي الثاني', emoji: '🌿', chapterIds: ['5', '6', '7'] },
+]
+
+
+export const banks: Record<string, PoolItem[]> = { '1': bank1, '2': bank2, '3': bank3, '4': bank4, '5': bank5, '6': bank6, '7': bank7 }
 
 export const exams: ExamDef[] = [
   { 
@@ -134,6 +177,50 @@ export const exams: ExamDef[] = [
     passPct: 60, 
     strict: true, 
     lockHours: 24 
+  },
+  { 
+    id: 'ex-5', 
+    title: 'اختبار مراجعة: تطبيقات النسبة المئوية', 
+    emoji: '📝', 
+    afterChapter: '5',
+    scope: ['5'], 
+    count: 16, 
+    passPct: 70, 
+    strict: false, 
+    lockHours: 0 
+  },
+  { 
+    id: 'ex-6', 
+    title: 'اختبار مراجعة: الإحصاء', 
+    emoji: '📝', 
+    afterChapter: '6',
+    scope: ['6'], 
+    count: 16, 
+    passPct: 70, 
+    strict: false, 
+    lockHours: 0 
+  },
+  {
+    id: 'ex-7',
+    title: 'اختبار مراجعة: الاحتمال',
+    emoji: '📝',
+    afterChapter: '7',
+    scope: ['7'],
+    count: 16,
+    passPct: 70,
+    strict: false,
+    lockHours: 0
+  },
+  {
+    id: 'mid2',
+    title: 'اختبار منتصف الفصل الدراسي الثاني',
+    emoji: '🎓',
+    afterChapter: '7',
+    scope: ['5', '6', '7'],
+    count: 30,
+    passPct: 60,
+    strict: true,
+    lockHours: 24
   },
 ]
 

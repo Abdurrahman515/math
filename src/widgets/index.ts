@@ -41,6 +41,24 @@ import BounceDraw from './BounceDraw'
 import BarModel from './BarModel'
 import ScaleMap from './ScaleMap'
 import PercentGrid from './PercentGrid'
+import PercentBar from './PercentBar'
+import PercentOf from './PercentOf'
+import EstimateRound from './EstimateRound'
+import PercentProportion from './PercentProportion'
+import ChangeBar from './ChangeBar'
+import DotPlot from './DotPlot'
+import MeanCups from './MeanCups'
+import CentralLab from './CentralLab'
+import BarBuilder from './BarBuilder'
+import Predict from './Predict'
+import RelationSort from './RelationSort'
+import DualChart from './DualChart'
+import ProbSpinner from './ProbSpinner'
+import ProbScale from './ProbScale'
+import ComplementBar from './ComplementBar'
+import OutcomeTable from './OutcomeTable'
+import TreeBuilder from './TreeBuilder'
+import CountingPrinciple from './CountingPrinciple'
 
 
 export const widgets: Record<string, ComponentType<WidgetProps>> = {
@@ -85,4 +103,22 @@ export const widgets: Record<string, ComponentType<WidgetProps>> = {
   barModel: BarModel,
   scaleMap: ScaleMap,
   percentGrid: PercentGrid,
+  percentBar: PercentBar,
+  percentOf: PercentOf,
+  estimateRound: EstimateRound,
+  percentProportion: PercentProportion,
+  changeBar: ChangeBar,
+  dotPlot: DotPlot,
+  meanCups: MeanCups,
+  centralLab: CentralLab,
+  barBuilder: BarBuilder,
+  predict: Predict,
+  relationSort: RelationSort,
+  dualChart: DualChart,
+  probSpinner: ProbSpinner,
+  probScale: ProbScale,
+  complementBar: ComplementBar,
+  outcomeTable: OutcomeTable,
+  treeBuilder: TreeBuilder,
+  countingPrinciple: CountingPrinciple,
 }

@@ -4,13 +4,14 @@ import { useProgress } from '../lib/store'
 import { toArabicDigits } from '../lib/arabicDigits'
 
 const ar = (n: number | string) => toArabicDigits(String(n))
+const now = Date.now();
 
 export function ExamCard({ e }: { e: ExamDef }) {
   const p = useProgress()
   const rec = p.exams[e.id]
   const lessons = chapters.filter((c) => e.scope.includes(c.id)).flatMap((c) => c.lessons)
   const done = lessons.filter((l) => p.lessons[l.id]).length
-  const left = rec && !rec.passed ? rec.lockedUntil - Date.now() : 0
+  const left = rec && !rec.passed ? rec.lockedUntil - now : 0
 
   const status = rec?.passed
     ? `نجحتي ✅ أفضل نتيجة ${ar(rec.best)}٪`

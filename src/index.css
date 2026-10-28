@@ -18,6 +18,14 @@ button{font:inherit;cursor:pointer}
 .card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 2px 10px #1e254714}
 .say{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:20px;padding:16px 18px;box-shadow:0 2px 10px #1e254714}
 .say p{margin:0;white-space:pre-line}
+.say-text{flex:1;min-width:0;white-space:pre-line}
+.rich-prose{white-space:pre-line}
+.rich-table-wrap{width:100%;max-width:100%;overflow-x:auto;margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.rich-table{width:100%;min-width:220px;border-collapse:collapse;font-size:.95em;line-height:1.5;white-space:normal}
+.rich-table th,.rich-table td{padding:7px 12px;text-align:center;border-bottom:1px solid var(--line)}
+.rich-table th{background:var(--brand2);font-weight:800}
+.rich-table tbody tr:nth-child(even){background:#f8f9ff}
+.rich-table tbody tr:last-child td{border-bottom:0}
 .say.tip{background:var(--tipbg)}.say.warn{background:var(--nobg)}
 .em{font-size:2rem;line-height:1.2}
 .btn{border:0;background:var(--brand);color:#fff;padding:10px 20px;border-radius:14px;min-height:48px;display:inline-flex;gap:8px;align-items:center;justify-content:center;font-weight:700}
@@ -158,3 +166,14 @@ button{font:inherit;cursor:pointer}
 .frac > .fd {
   padding: 0.05em 0.3em 0;
 }
+.fold{width:100%;display:flex;align-items:center;gap:12px;border:0;background:var(--card);color:var(--ink);text-align:start;border-radius:18px;padding:14px 16px;box-shadow:0 2px 10px #1e254714;font:inherit}
+.fold:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.fold .ft{flex:1;font-weight:800}
+.fold .fs{display:block;color:var(--mut);font-weight:400;font-size:.8rem}
+.fold .chev{flex:none;color:var(--brand);transition:transform .25s}
+.fold.open .chev{transform:rotate(180deg)}
+.fold.sem{background:var(--brand);color:#fff;margin-top:18px;padding:16px 18px;font-size:1.2rem}
+.fold.sem .fs{color:#e0e0ff}
+.fold.sem .chev{color:#fff}
+.fold.chap{background:var(--brand2);box-shadow:none;margin-top:14px}
+.fold-body{overflow:hidden;padding:2px 8px 12px;margin:0 -8px}
