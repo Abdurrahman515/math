@@ -153,6 +153,20 @@ export function Home() {
         )
       })}
 
+      <section>
+        <a className="lesson times" href="#/times">
+          <span className="em">✖️</span>
+          <span className="lt">
+            تدريب جدول الضرب
+            <small>
+              {p.times.sessions > 0
+                ? `أفضل نتيجة: ${ar(p.times.best)} من ٣٠ • ${ar(p.times.sessions)} جلسات`
+                : '٣٠ سؤالاً • ٧ ثوانٍ لكل سؤال'}
+            </small>
+          </span>
+        </a>
+      </section>
+
       <div className="card backup">
         <div className="mut">لنقل تقدمك بين الجهازين:</div>
         <div className="row">

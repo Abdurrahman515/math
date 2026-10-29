@@ -52,6 +52,25 @@ import { lesson72 } from './lesson-7-2'
 import { lesson73 } from './lesson-7-3'
 import { lesson74 } from './lesson-7-4'
 import { bank7 } from './bank-7'
+import { lesson81 } from './lesson-8-1'
+import { lesson82 } from './lesson-8-2'
+import { lesson83 } from './lesson-8-3'
+import { lesson84 } from './lesson-8-4'
+import { lesson85 } from './lesson-8-5'
+import { lesson86 } from './lesson-8-6'
+import { lesson87 } from './lesson-8-7'
+import { lesson88 } from './lesson-8-8'
+import { bank8 } from './bank-8'
+import { lesson91 } from './lesson-9-1'
+import { lesson92 } from './lesson-9-2'
+import { lesson93 } from './lesson-9-3'
+import { lesson94 } from './lesson-9-4'
+import { lesson95 } from './lesson-9-5'
+import { lesson96 } from './lesson-9-6'
+import { lesson97 } from './lesson-9-7'
+import { lesson98 } from './lesson-9-8'
+import { lesson99 } from './lesson-9-9'
+import { bank9 } from './bank-9'
 
 
 export const chapters: Chapter[] = [
@@ -97,6 +116,18 @@ export const chapters: Chapter[] = [
     emoji: '🎲',
     lessons: [lesson71, lesson72, lesson73, lesson74],
   },
+  {
+    id: '8',
+    title: 'الهندسة: المضلّعات',
+    emoji: '🔷',
+    lessons: [lesson81, lesson82, lesson83, lesson84, lesson85, lesson86, lesson87, lesson88],
+  },
+  {
+    id: '9',
+    title: 'القياس: الأشكال الثنائية والثلاثية الأبعاد',
+    emoji: '📏',
+    lessons: [lesson91, lesson92, lesson93, lesson94, lesson95, lesson96, lesson97, lesson98, lesson99],
+  },
 ]
 export const allLessons = chapters.flatMap((c) => c.lessons);
 
@@ -105,11 +136,11 @@ export type Semester = { id: string; title: string; emoji: string; chapterIds: s
 
 export const semesters: Semester[] = [
   { id: 's1', title: 'الفصل الدراسي الأول', emoji: '🌱', chapterIds: ['1', '2', '3', '4'] },
-  { id: 's2', title: 'الفصل الدراسي الثاني', emoji: '🌿', chapterIds: ['5', '6', '7'] },
+  { id: 's2', title: 'الفصل الدراسي الثاني', emoji: '🌿', chapterIds: ['5', '6', '7', '8', '9'] },
 ]
 
 
-export const banks: Record<string, PoolItem[]> = { '1': bank1, '2': bank2, '3': bank3, '4': bank4, '5': bank5, '6': bank6, '7': bank7 }
+export const banks: Record<string, PoolItem[]> = { '1': bank1, '2': bank2, '3': bank3, '4': bank4, '5': bank5, '6': bank6, '7': bank7, '8': bank8, '9': bank9 }
 
 export const exams: ExamDef[] = [
   { 
@@ -218,6 +249,39 @@ export const exams: ExamDef[] = [
     afterChapter: '7',
     scope: ['5', '6', '7'],
     count: 30,
+    passPct: 60,
+    strict: true,
+    lockHours: 24
+  },
+  {
+    id: 'ex-8',
+    title: 'اختبار مراجعة: الهندسة (المضلّعات)',
+    emoji: '📝',
+    afterChapter: '8',
+    scope: ['8'],
+    count: 16,
+    passPct: 70,
+    strict: false,
+    lockHours: 0
+  },
+  {
+    id: 'ex-9',
+    title: 'اختبار مراجعة: القياس',
+    emoji: '📝',
+    afterChapter: '9',
+    scope: ['9'],
+    count: 16,
+    passPct: 70,
+    strict: false,
+    lockHours: 0
+  },
+  {
+    id: 'year',
+    title: 'اختبار نهاية العام (الفصل الدراسي الثاني)',
+    emoji: '🏆',
+    afterChapter: '9',
+    scope: ['5', '6', '7', '8', '9'],
+    count: 60,
     passPct: 60,
     strict: true,
     lockHours: 24

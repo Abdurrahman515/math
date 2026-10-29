@@ -1,13 +1,22 @@
 import { useSyncExternalStore } from 'react'
 
+export type TimesRecord = { sessions: number; best: number }
+
 export type Progress = {
   lessons: Record<string, { stars: number; at: number }>
   mistakes: { lesson: string; q: string; chosen: string; at: number }[]
   exams: Record<string, ExamRecord>
+  times: TimesRecord
+}
+
+const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) && v >= 0 ? v : 0)
+const cleanTimes = (t: unknown): TimesRecord => {
+  const o = (t ?? {}) as Partial<TimesRecord>
+  return { sessions: num(o.sessions), best: num(o.best) }
 }
 
 const KEY = 'math-app:v1'
-const empty = (): Progress => ({ lessons: {}, mistakes: [], exams: {} })
+const empty = (): Progress => ({ lessons: {}, mistakes: [], exams: {}, times: { sessions: 0, best: 0 } })
 
 function load(): Progress {
   try {
@@ -19,6 +28,7 @@ function load(): Progress {
           lessons: p.lessons,
           mistakes: Array.isArray(p.mistakes) ? p.mistakes : [],
           exams: p.exams && typeof p.exams === 'object' ? p.exams : {},
+          times: cleanTimes(p.times),
         }
     }
   } catch { /* تجاهل */ }
@@ -78,7 +88,13 @@ export async function importProgress(file: File) {
       weak: v.lastAt > o.lastAt ? v.weak : o.weak,
     }
   }
-  set({ lessons: merged, mistakes: m.sort((a, b) => a.at - b.at).slice(-300), exams: ex })
+  const t = cleanTimes(p.times)
+  set({
+    lessons: merged,
+    mistakes: m.sort((a, b) => a.at - b.at).slice(-300),
+    exams: ex,
+    times: { sessions: Math.max(state.times.sessions, t.sessions), best: Math.max(state.times.best, t.best) },
+  })
 }
 
 
@@ -101,4 +117,12 @@ export function recordExam(id: string, pct: number, passed: boolean, weak: strin
     weak,
   }
   set({ ...state, exams: { ...state.exams, [id]: rec } })
+}
+
+
+export function recordTimes(correct: number) {
+  set({
+    ...state,
+    times: { sessions: state.times.sessions + 1, best: Math.max(state.times.best, correct) },
+  })
 }

@@ -59,6 +59,23 @@ import ComplementBar from './ComplementBar'
 import OutcomeTable from './OutcomeTable'
 import TreeBuilder from './TreeBuilder'
 import CountingPrinciple from './CountingPrinciple'
+import AngleLab from './AngleLab'
+import CrossLines from './CrossLines'
+import IsoLab from './IsoLab'
+import PieBuilder from './PieBuilder'
+import PolyAngles from './PolyAngles'
+import QuadFamily from './QuadFamily'
+import SimilarLab from './SimilarLab'
+import TriangleLab from './TriangleLab'
+import AreaLab from './AreaLab'
+import PiLab from './PiLab'
+import CircleSlices from './CircleSlices'
+import ShapeSplit from './ShapeSplit'
+import NetLab from './NetLab'
+import SolidSorter from './SolidSorter'
+import ViewsBuilder from './ViewsBuilder'
+import PrismLab from './PrismLab'
+import CylinderStack from './CylinderStack'
 
 
 export const widgets: Record<string, ComponentType<WidgetProps>> = {
@@ -121,4 +138,21 @@ export const widgets: Record<string, ComponentType<WidgetProps>> = {
   outcomeTable: OutcomeTable,
   treeBuilder: TreeBuilder,
   countingPrinciple: CountingPrinciple,
+  angleLab: AngleLab,
+  crossLines: CrossLines,
+  triangleLab: TriangleLab,
+  isoLab: IsoLab,
+  pieBuilder: PieBuilder,
+  quadFamily: QuadFamily,
+  similarLab: SimilarLab,
+  polyAngles: PolyAngles,
+  areaLab: AreaLab,
+  piLab: PiLab,
+  circleSlices: CircleSlices,
+  shapeSplit: ShapeSplit,
+  netLab: NetLab,
+  solidSorter: SolidSorter,
+  viewsBuilder: ViewsBuilder,
+  prismLab: PrismLab,
+  cylinderStack: CylinderStack,
 }
