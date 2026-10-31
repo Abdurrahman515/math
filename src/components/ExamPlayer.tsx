@@ -8,6 +8,9 @@ import { allLessons, poolFor } from '../content'
 import { recordExam, useProgress } from '../lib/store'
 import { toArabicDigits } from '../lib/arabicDigits'
 import { Rich } from './Rich'
+import { CertificateBox } from './CertificateBox'
+import { hasCertificate } from '../lib/certificate'
+
 
 const ar = (n: number | string) => toArabicDigits(String(n))
 
@@ -129,6 +132,9 @@ export function ExamPlayer({ def, onExit }: { def: ExamDef; onExit: () => void }
           {def.lockHours > 0 && <p>⏳ إذا رسبتي، بتقدري تعيدي بعد <b>{ar(def.lockHours)}</b> ساعة.</p>}
           {rec && <p className="mut">محاولاتك: {ar(rec.attempts)} — أفضل نتيجة: {ar(rec.best)}٪ {rec.passed && '✅'}</p>}
         </div>
+
+        {rec?.passed && hasCertificate(def.id) && <CertificateBox title={def.title} />}
+
         {lockLeft > 0 ? (
           <div className="card center" style={{ marginTop: 14 }}>
             <Lock size={30} />
@@ -204,6 +210,9 @@ export function ExamPlayer({ def, onExit }: { def: ExamDef; onExit: () => void }
           <div className={'score ' + (passed ? 'pass' : 'fail')}>{ar(pct)}٪</div>
           <div>أجبتي صح على <b>{ar(right)}</b> من <b>{ar(qs.length)}</b></div>
           <h3 className="h3">{passed ? 'نجحتي! برافو عليكِ 👏' : `ما وصلتي لـ ${ar(def.passPct)}٪ هالمرة، بس عادي!`}</h3>
+
+          {passed && hasCertificate(def.id) && <CertificateBox title={def.title} />}
+
           {weak.length > 0 && (
             <>
               <div className="mut">دروس بدها مراجعة:</div>

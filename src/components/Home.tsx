@@ -168,7 +168,7 @@ export function Home() {
       </section>
 
       <div className="card backup">
-        <div className="mut">لنقل تقدمك بين الجهازين:</div>
+        <div className="mut" style={{ fontWeight: "700" }}>لنقل تقدمك بين الجهازين:</div>
         <div className="row">
           <button className="btn" onClick={exportProgress}><Download size={18} /> حفظ تقدمي</button>
           <button className="btn alt" onClick={() => file.current?.click()}><Upload size={18} /> استرجاع</button>

@@ -2,6 +2,8 @@ import { chapters } from '../content'
 import type { ExamDef } from '../lib/exam'
 import { useProgress } from '../lib/store'
 import { toArabicDigits } from '../lib/arabicDigits'
+import { hasCertificate } from '../lib/certificate'
+
 
 const ar = (n: number | string) => toArabicDigits(String(n))
 const now = Date.now();
@@ -14,7 +16,7 @@ export function ExamCard({ e }: { e: ExamDef }) {
   const left = rec && !rec.passed ? rec.lockedUntil - now : 0
 
   const status = rec?.passed
-    ? `نجحتي ✅ أفضل نتيجة ${ar(rec.best)}٪`
+    ? `نجحتي ✅ أفضل نتيجة ${ar(rec.best)}٪${hasCertificate(e.id) ? ' — شهادتك جاهزة 🎓' : ''}`
     : left > 0
       ? `🔒 الإعادة بعد ${ar(Math.ceil(left / 3600000))} ساعة تقريباً`
       : rec
