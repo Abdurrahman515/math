@@ -1,5 +1,5 @@
 
-name: Deploy Vite app to GitHub Pages
+name: Deploy math app to GitHub Pages
 
 on:
   push:
