@@ -1,7 +1,17 @@
+@import '@fontsource/noto-naskh-arabic/arabic-400.css';
+@import '@fontsource/noto-naskh-arabic/arabic-700.css';
+@import '@fontsource/noto-naskh-arabic/latin-400.css';
+@import '@fontsource/noto-naskh-arabic/latin-700.css';
+
 :root{--bg:#f4f6fb;--card:#fff;--ink:#1e2547;--mut:#6b7596;--brand:#5b5bd6;--brand2:#ececff;--ok:#15803d;--okbg:#dcfce7;--no:#b91c1c;--nobg:#fee2e2;--tip:#92400e;--tipbg:#fef3c7;--line:#e2e6f3}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;font-size:18px;line-height:1.8;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family: 'Noto Naskh Arabic', 'Amiri', 'Geeza Pro', 'Traditional Arabic', serif;font-size:19px;line-height:2;-webkit-tap-highlight-color:transparent}
+input,
+textarea,
+select {
+  font: inherit;
+}
 button{font:inherit;cursor:pointer}
 .app{max-width:760px;margin:0 auto;padding:0 16px calc(120px + env(safe-area-inset-bottom))}
 .m{unicode-bidi:isolate;font-weight:700;white-space:nowrap}
