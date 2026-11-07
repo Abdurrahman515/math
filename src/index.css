@@ -193,3 +193,4 @@ button{font:inherit;cursor:pointer}
 .tt-fill.low{background:var(--no)}
 .tt-q{font-size:3rem;font-weight:800;margin:14px 0 18px;line-height:1.3}
 .tt-miss{background:var(--nobg);color:var(--no);padding:4px 12px;border-radius:12px;font-weight:700;unicode-bidi:isolate}
+.sign-btn { padding: 0 16px; font-weight: 800; font-size: 1.2rem; }

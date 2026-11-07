@@ -46,6 +46,13 @@ export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string;
     else miss(q.wrong?.find((w) => w.value === n)?.why ?? q.fallback ?? 'مو هيك بعد، جرّبي مرة تانية 🙂', val);
   }
 
+  const toggleSign = () => {
+    if (!val) setVal('-')
+    else if (val.startsWith('-')) setVal(val.slice(1))
+    else setVal('-' + val)
+  }
+
+
   return (
     <div className="card">
       <div className="q-prompt"><Rich t={q.prompt} /></div>
@@ -67,6 +74,15 @@ export function Quiz({ q, lessonId, onSolved }: { q: Question; lessonId: string;
         </div>
       ) : (
         <div className="numrow">
+          <button
+            type="button"
+            className="btn alt sign-btn"
+            disabled={solved}
+            onClick={toggleSign}
+            title="تغيير الإشارة (+/-)"
+          >
+            ±
+          </button>
           <input
             className="num" dir="ltr" inputMode="decimal" placeholder="جوابك هون"
             value={val} disabled={solved}
