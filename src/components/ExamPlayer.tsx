@@ -110,6 +110,12 @@ export function ExamPlayer({ def, onExit }: { def: ExamDef; onExit: () => void }
 
   const titleOf = (id: string) => allLessons.find((l) => l.id === id)?.title ?? ''
 
+  const toggleSign = () => {
+    if (!text) setText('-')
+    else if (text.startsWith('-')) setText(text.slice(1))
+    else setText('-' + text)
+  }
+
   const top = (
     <div className="top">
       <button className="iconbtn" onClick={leave} aria-label="رجوع"><ArrowRight size={22} /></button>
@@ -171,12 +177,23 @@ export function ExamPlayer({ def, onExit }: { def: ExamDef; onExit: () => void }
               })}
             </div>
           ) : (
-            <input
-              className="num" dir="ltr" inputMode="decimal" placeholder="جوابك هون"
-              value={text} disabled={!!fb}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && confirm()}
-            />
+            <div className='numrow'>
+              <button
+                type="button"
+                className="btn alt sign-btn"
+                disabled={!!fb}
+                onClick={toggleSign}
+                title="تغيير الإشارة (+/-)"
+              >
+                ±
+              </button>
+              <input
+                className="num" dir="ltr" inputMode="decimal" placeholder="جوابك هون"
+                value={text} disabled={!!fb}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && confirm()}
+              />
+            </div>
           )}
           {fb && (
             <div className={'fb ' + (fb.ok ? 'ok' : 'no')}>
