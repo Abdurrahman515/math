@@ -109,7 +109,7 @@ export default function ReverseChain({ props, onDone }: WidgetProps) {
           {!finished && step && (
             <>
               <div className="mut" style={{ marginTop: 12 }}>
-                الناتج الحالي: <b>{fmtInt(cur)}</b>. ما الناتج **قبل** الخطوة ({toArabicDigits(lab(step))})؟
+                الناتج الحالي: <b>{fmtInt(cur)}</b>. ما الناتج <b>قبل</b> الخطوة ({toArabicDigits(lab(step))})؟
               </div>
 
               <div className="numrow" style={{ justifyContent: 'center', marginTop: 14 }}>
